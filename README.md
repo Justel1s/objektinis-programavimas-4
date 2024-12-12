@@ -3,11 +3,12 @@
 VERSLAS:
 --------------------------------------
 #### Verslo modelis (sugalvotas paties): 
-Lėktuvų dalių/klaidų taisymas, kurį vykdo aukcioną laimėjusi techninės priežiūros kompanija
+Lėktuvų dalių/klaidų taisymas, kurį vykdo aukcioną laimėjusi techninės priežiūros kompanija. Pralaimėję dalyviai gauna savo statytas sumas, o su laimėtoju tęsiamas verslo procesas. Pabaigus laimėtojam savo pažadėtus darbus, kompanija išmoka laimėtą sumą.
 #### Verslo dalyviai: 
 Lėktuvų kompanija ir techninės priežiūros kompanija
 #### Verslo terpė: 
 Business-to-Business (B2B)
+
 
 TIKSLAS:
 --------------------------------------
