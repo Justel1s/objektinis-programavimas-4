@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airplane Maintenance</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: skyblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 830px;
+            margin-top: 20px;
+        }
+
+        .box {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .box-header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        .payment-btn {
+            background-color: #28a745;
+        }
+
+        .payment-btn:hover {
+            background-color: #218838;
+        }
+
+        #managerControls form {
+            display: grid;
+            gap: 10px;
+            margin: 0 auto;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #projectsTable {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        #mainContent {
+            display: none;
+        }
+
+        .status-completed {
+            color: #28a745;
+        }
+
+        .status-pending {
+            color: #ffc107;
+        }
+        #debesis{
+            position: fixed;
+            z-index: -4;
+            width: 10%;
+            left: 5%;
+            top: 0%;
+        }
+        #debesis2{
+            position: fixed;
+            z-index: -5;
+            width: 20%;
+            left: 5%;
+            top: 0%;
+        }
+        #debesis3{
+            position: fixed;
+            z-index: -6;
+            width: 20%;
+            right: 5%;
+            bottom: 0%;
+        }
+        #debesis4{
+            position: fixed;
+            z-index: -7;
+            width: 10%;
+            right: 5%;
+            bottom: 0%;
+        }
+        #lektuvas{
+            position: fixed;
+            z-index: -8;
+            width: 9%;
+            left: 0%;
+            bottom: 10%;
+            transform: translateX(-150%) translateY(-100%);
+            animation-name: lektuvas;
+            animation-duration: 9s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes lektuvas {
+            0% {transform: translateX(-150%) translateY(-100%);}
+            100% {transform: translateX(1200%) translateY(100%);}
+        }
+        #lektuvas2{
+            position: fixed;
+            z-index: -8;
+            width: 9%;
+            left: 0%;
+            top: 10%;
+            transform: translateX(1200%) translateY(100%) rotateY(180deg);
+            animation-name: lektuvas2;
+            animation-duration: 12s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes lektuvas2 {
+            0% {transform: translateX(1200%) translateY(100%) rotateY(180deg);}
+            100% {transform: translateX(-150%) translateY(-100%) rotateY(180deg);}
+        }
+    </style>
+</head>
+<body>
+    <img src="photos/debesis.png" id="debesis" alt="debesis">
+    <img src="photos/debesis.png" id="debesis2" alt="debesis">
+    <img src="photos/debesis.png" id="debesis3" alt="debesis">
+    <img src="photos/debesis.png" id="debesis4" alt="debesis">
+    <img src="photos/lektuvas_desine.png" id="lektuvas" alt="lektuvas">
+    <img src="photos/lektuvas_kaire.svg" id="lektuvas2" alt="lektuvas">
+    <div class="container">
+        <!-- Initial wallet connection box -->
+        <div class="box" id="walletBox">
+            <div class="box-header">
+                <h2>Airplane Maintenance Project</h2>
+            </div>
+            <button id="connectWalletBtn">Connect Wallet</button>
+            <p id="walletStatus">Wallet not connected</p>
+        </div>
+
+        <!-- Main content (hidden initially) -->
+        <div id="mainContent">
+            <div id="managerControls" class="box" style="display: none;">
+                <div class="box-header">
+                    <h3>Create Maintenance Project</h3>
+                </div>
+                <form id="createProjectForm">
+                    <input type="text" id="airplaneModel" placeholder="Airplane Model" required>
+                    <input type="text" id="description" placeholder="Error Description" required>
+                    <input type="number" id="cost" placeholder="Estimated Cost (ETH)" required step="0.01">
+                    <button type="submit" id="submitProjectBtn">Create Project</button>
+                </form>
+            </div>
+
+            <div class="box">
+                <table id="projectsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Model</th>
+                            <th>Description</th>
+                            <th>Cost (ETH)</th>
+                            <th>Status</th>
+                            <th>Bidders</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script>
+        let web3;
+        let contract;
+        let currentAccount;
+        
+        // Replace with your contract address and ABI
+        const contractAddress = "0xED39b1267580Cf2A14cCa899776DD3A731fD66A3";
+        const contractABI = [
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "bidder",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "BidPlaced",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "bidder",
+				"type": "address"
+			}
+		],
+		"name": "BidderSelected",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "bidder",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "PaymentReleased",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			}
+		],
+		"name": "ProjectCompleted",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "airplaneModel",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "cost",
+				"type": "uint256"
+			}
+		],
+		"name": "ProjectCreated",
+		"type": "event"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "fallback"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			}
+		],
+		"name": "completeProject",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_airplaneModel",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_cost",
+				"type": "uint256"
+			}
+		],
+		"name": "createProject",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			}
+		],
+		"name": "getProject",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "airplaneModel",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "cost",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "client",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "selectedBidder",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "isCompleted",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isClosed",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isPaid",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			}
+		],
+		"name": "getProjectBids",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "bidders",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "amounts",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "manager",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			}
+		],
+		"name": "payBidder",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			}
+		],
+		"name": "placeBid",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "projectCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "projects",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "airplaneModel",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "cost",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "client",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "selectedBidder",
+				"type": "address"
+			},
+			{
+				"internalType": "bool",
+				"name": "isCompleted",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isClosed",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "isPaid",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "projectId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "bidder",
+				"type": "address"
+			}
+		],
+		"name": "selectBidder",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"stateMutability": "payable",
+		"type": "receive"
+	}
+];
+
+        window.onload = async function() {
+            if (window.ethereum) {
+                web3 = new Web3(window.ethereum);
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                
+                document.getElementById("connectWalletBtn").onclick = connectWallet;
+                document.getElementById("createProjectForm").onsubmit = createProject;
+                
+                ethereum.on('accountsChanged', function (accounts) {
+                    currentAccount = accounts[0];
+                    updateUI();
+                    loadProjects();
+                });
+            } else {
+                alert("Please install MetaMask!");
+            }
+        };
+
+        async function connectWallet() {
+            try {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                currentAccount = accounts[0];
+                document.getElementById("walletStatus").innerText = `Connected: ${currentAccount}`;
+                
+                // Show main content after successful connection
+                document.getElementById("mainContent").style.display = "block";
+                
+                updateUI();
+                loadProjects();
+            } catch (error) {
+                console.error("Failed to connect wallet:", error);
+                alert("Failed to connect wallet: " + error.message);
+            }
+        }
+
+        async function isManager() {
+            const manager = await contract.methods.manager().call();
+            return currentAccount.toLowerCase() === manager.toLowerCase();
+        }
+
+        async function updateUI() {
+            const isManagerAccount = await isManager();
+            document.getElementById("managerControls").style.display = 
+                isManagerAccount ? "block" : "none";
+        }
+
+        async function createProject(e) {
+            e.preventDefault();
+            try {
+                const model = document.getElementById("airplaneModel").value;
+                const description = document.getElementById("description").value;
+                const cost = web3.utils.toWei(document.getElementById("cost").value, "ether");
+
+                await contract.methods.createProject(model, description, cost)
+                    .send({ from: currentAccount });
+
+                alert("Project created successfully!");
+                loadProjects();
+                e.target.reset();
+            } catch (error) {
+                alert("Failed to create project: " + error.message);
+            }
+        }
+
+        async function placeBid(projectId) {
+            try {
+                const bidAmount = prompt("Enter bid amount in ETH:");
+                if (!bidAmount) return;
+
+                await contract.methods.placeBid(projectId).send({
+                    from: currentAccount,
+                    value: web3.utils.toWei(bidAmount, "ether")
+                });
+
+                alert("Bid placed successfully!");
+                loadProjects();
+            } catch (error) {
+                alert("Failed to place bid: " + error.message);
+            }
+        }
+
+        async function selectBidder(projectId) {
+            try {
+                const bidsData = await contract.methods.getProjectBids(projectId).call();
+                const bidder = prompt("Enter bidder's address:");
+                if (!bidder) return;
+
+                await contract.methods.selectBidder(projectId, bidder)
+                    .send({ from: currentAccount });
+
+                alert("Bidder selected successfully!");
+                loadProjects();
+            } catch (error) {
+                alert("Failed to select bidder: " + error.message);
+            }
+        }
+
+        async function completeProject(projectId) {
+            try {
+                await contract.methods.completeProject(projectId)
+                    .send({ from: currentAccount });
+
+                alert("Project marked as completed! Awaiting payment from manager.");
+                loadProjects();
+            } catch (error) {
+                alert("Failed to complete project: " + error.message);
+            }
+        }
+
+        async function payBidder(projectId) {
+            try {
+                const project = await contract.methods.getProject(projectId).call();
+                const bidsData = await contract.methods.getProjectBids(projectId).call();
+                
+                // Find the bid amount
+                const bidderIndex = bidsData[0].findIndex(addr => 
+                    addr.toLowerCase() === project.selectedBidder.toLowerCase()
+                );
+                
+                if (bidderIndex === -1) {
+                    throw new Error("Bidder not found");
+                }
+
+                const bidAmount = bidsData[1][bidderIndex];
+
+                await contract.methods.payBidder(projectId)
+                    .send({ 
+                        from: currentAccount,
+                        value: bidAmount 
+                    });
+
+                alert("Payment sent successfully!");
+                loadProjects();
+            } catch (error) {
+                alert("Failed to send payment: " + error.message);
+            }
+        }
+
+        async function loadProjects() {
+            const tbody = document.querySelector("#projectsTable tbody");
+            tbody.innerHTML = "";
+
+            try {
+                const projectCount = await contract.methods.projectCount().call();
+                const isManagerAccount = await isManager();
+                
+                for (let i = 0; i < projectCount; i++) {
+                    const project = await contract.methods.getProject(i).call();
+                    const bidsData = await contract.methods.getProjectBids(i).call();
+                    
+                    let status = project.isClosed ? 
+                        (project.isCompleted ? 
+                            (project.isPaid ? "Completed & Paid" : "Completed, Awaiting Payment") 
+                            : "In Progress") 
+                        : "Open for Bids";
+
+                    let actions = '';
+                    
+                    if (isManagerAccount) {
+                        if (!project.isClosed) {
+                            actions = `<button onclick="selectBidder(${i})">Select Bidder</button>`;
+                        } else if (project.isCompleted && !project.isPaid) {
+                            actions = `<button onclick="payBidder(${i})" class="payment-btn">Pay Bidder</button>`;
+                        }
+                    } else {
+                        if (!project.isClosed) {
+                            actions = `<button onclick="placeBid(${i})">Place Bid</button>`;
+                        } else if (currentAccount.toLowerCase() === project.selectedBidder.toLowerCase() 
+                                 && !project.isCompleted) {
+                            actions = `<button onclick="completeProject(${i})">Mark Complete</button>`;
+                        }
+                    }
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${i}</td>
+                        <td>${project.airplaneModel}</td>
+                        <td>${project.description}</td>
+                        <td>${web3.utils.fromWei(project.cost, "ether")}</td>
+                        <td class="${project.isCompleted ? 'status-completed' : ''}">${status}</td>
+                        <td>${formatBidders(bidsData[0], bidsData[1])}</td>
+                        <td>${actions}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                }
+            } catch (error) {
+                console.error("Error loading projects:", error);
+            }
+        }
+
+        function formatBidders(bidders, amounts) {
+            if (bidders.length === 0) return "No bidders";
+            
+            return bidders.map((bidder, i) => 
+                `${bidder.slice(0,6)}...${bidder.slice(-4)}: ${web3.utils.fromWei(amounts[i], "ether")} ETH`
+            ).join("<br>");
+        }
+    </script>
+</body>
+</html>
