@@ -40,4 +40,13 @@ Lėktuvų kompanijos matomas puslapis:
 Techninės priežiūros kompanijos matomas puslapis:
 ![image](https://github.com/user-attachments/assets/36eacd98-58d4-4f55-81ad-6cce715f8fdd)
 
+NAUDOTI ĮRANKIAI:
+--------------------------------------
+- Visual Studio Code
+- RemixIDE
+- Ganache
+- Ephemery test tinklas
+- Metamesk įdiegiklis
+
+
 
